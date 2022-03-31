@@ -230,7 +230,8 @@ class ExchangeFinder(
           pingIntervalMillis,
           connectionRetryEnabled,
           call,
-          eventListener
+          eventListener,
+          call.client.forceAllowClearText
       )
     } finally {
       call.connectionToCancel = null

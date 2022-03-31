@@ -217,6 +217,8 @@ open class OkHttpClient internal constructor(
   @get:JvmName("minWebSocketMessageToCompress")
   val minWebSocketMessageToCompress: Long = builder.minWebSocketMessageToCompress
 
+  @get:JvmName("forceAllowClearText") val forceAllowClearText: Boolean = builder.forceAllowClearText
+
   val routeDatabase: RouteDatabase = builder.routeDatabase ?: RouteDatabase()
 
   constructor() : this(Builder())
@@ -497,6 +499,7 @@ open class OkHttpClient internal constructor(
     internal var pingInterval = 0
     internal var minWebSocketMessageToCompress = RealWebSocket.DEFAULT_MINIMUM_DEFLATE_SIZE
     internal var routeDatabase: RouteDatabase? = null
+    internal var forceAllowClearText: Boolean = false
 
     internal constructor(okHttpClient: OkHttpClient) : this() {
       this.dispatcher = okHttpClient.dispatcher
@@ -529,6 +532,7 @@ open class OkHttpClient internal constructor(
       this.pingInterval = okHttpClient.pingIntervalMillis
       this.minWebSocketMessageToCompress = okHttpClient.minWebSocketMessageToCompress
       this.routeDatabase = okHttpClient.routeDatabase
+      this.forceAllowClearText = okHttpClient.forceAllowClearText
     }
 
     /**
@@ -818,6 +822,14 @@ open class OkHttpClient internal constructor(
       }
 
       this.connectionSpecs = connectionSpecs.toImmutableList()
+    }
+
+    /**
+     * Enables this client to bypass the network security policy to enable
+     * clear text communication.
+     */
+    fun forceAllowClearText(forceAllowClearText: Boolean) = apply {
+      this.forceAllowClearText = forceAllowClearText
     }
 
     /**

@@ -170,7 +170,8 @@ class RealConnection(
     pingIntervalMillis: Int,
     connectionRetryEnabled: Boolean,
     call: Call,
-    eventListener: EventListener
+    eventListener: EventListener,
+    forceAllowClearText: Boolean
   ) {
     check(protocol == null) { "already connected" }
 
@@ -184,7 +185,7 @@ class RealConnection(
             "CLEARTEXT communication not enabled for client"))
       }
       val host = route.address.url.host
-      if (!Platform.get().isCleartextTrafficPermitted(host)) {
+      if (!forceAllowClearText && !Platform.get().isCleartextTrafficPermitted(host)) {
         throw RouteException(UnknownServiceException(
             "CLEARTEXT communication to $host not permitted by network security policy"))
       }
